@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <style>
+    body {
+      /* Try multiple possible image filenames - update with your actual image filename */
+      background-image: url('background.jpg'), url('background.png'), url('circle-of-care.jpg'), url('circle-of-care.png');
+      background-size: cover; /* Cover the entire viewport */
+      background-position: center; /* Center the image */
+      background-repeat: no-repeat; /* Don't repeat the image */
+      background-attachment: fixed; /* Fixed background on scroll */
+      background-color: #0d1b3e; /* Fallback dark blue background - shows if image not found */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 50px 20px;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 500px;
+      background-color: rgba(13, 27, 62, 0.7); /* Semi-transparent dark blue overlay */
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(5px); /* Optional: adds a blur effect */
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 25px;
+      margin-bottom: 20px;
+      border-radius: 50px; /* Creates the pill shape */
+      border: none;
+      font-size: 16px;
+      color: #666;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border-radius: 50px;
+      border: none;
+      background-color: #ffffff;
+      color: #0d1b3e;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.3s;
+      font-size: 16px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <form id="registration-form">
+      <input type="text" name="FirstName" placeholder="First Name" required>
+      <input type="text" name="LastName" placeholder="Last Name" required>
+      <input type="text" name="Speciality" placeholder="Speciality" required>
+      <input type="text" name="Hospital" placeholder="Hospital" required>
+      <input type="tel" name="MobileNumber" placeholder="Mobile Number" required>
+      <input type="email" name="Email" placeholder="Email" required>
+      <input type="text" name="SCFHS" placeholder="SCFHS" required>
+      <button type="submit" id="submit">Register</button>
+    </form>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxeYEh7WmIhJug-PXfK4nqdS_LlVaighLP1YALOUYpmrzedwcDliFoX1ZW_Uh1HmACE/exec'
+    const form = document.getElementById('registration-form')
+
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      
+      // Disable submit button to prevent double submission
+      const submitButton = document.getElementById('submit')
+      const originalText = submitButton.textContent
+      submitButton.disabled = true
+      submitButton.textContent = 'Submitting...'
+      
+      // Convert FormData to URL-encoded format for better compatibility
+      const formData = new FormData(form)
+      const data = new URLSearchParams()
+      for (const pair of formData) {
+        data.append(pair[0], pair[1])
+      }
+      
+      fetch(scriptURL, { 
+        method: 'POST', 
+        mode: 'no-cors', // Required for Google Apps Script
+        redirect: 'follow',
+        body: data
+      })
+        .then(() => {
+          // With no-cors mode, we can't read response, but if fetch succeeds, assume it worked
+          // Small delay to ensure data is saved
+          setTimeout(() => {
+            alert("Registered successfully!")
+            form.reset()
+            submitButton.disabled = false
+            submitButton.textContent = originalText
+          }, 500)
+        })
+        .catch(error => {
+          console.error('=== ERROR DETAILS ===')
+          console.error('Error type:', error.name)
+          console.error('Error message:', error.message)
+          console.error('Full error:', error)
+          console.error('Script URL:', scriptURL)
+          console.error('========================')
+          
+          let errorMsg = "An error occurred while submitting the form.\n\n"
+          errorMsg += "Common issues:\n"
+          errorMsg += "1. Google Apps Script not deployed with 'Anyone' access\n"
+          errorMsg += "2. Sheet headers don't match form field names\n"
+          errorMsg += "3. initialSetup() function not run\n"
+          errorMsg += "4. Network/CORS issue\n\n"
+          errorMsg += "Check browser console (F12) for more details."
+          
+          alert(errorMsg)
+          submitButton.disabled = false
+          submitButton.textContent = originalText
+        })
+    })
+  </script>
+</body>
+</html>
