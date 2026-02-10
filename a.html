@@ -54,6 +54,13 @@
       image-rendering: auto;
     }
 
+    @media (max-width: 1024px) {
+      .cover-photo {
+        object-fit: contain;
+        object-position: center center;
+      }
+    }
+
     .cover-photo-container {
       width: 100%;
       margin: 0;
@@ -292,8 +299,15 @@
       }
 
       .cover-photo-container {
-        height: 50vh;
-        max-height: 50vh;
+        height: auto;
+        max-height: none;
+        min-height: 200px;
+      }
+
+      .cover-photo {
+        height: auto;
+        object-fit: contain;
+        object-position: center center;
       }
 
       form {
@@ -332,13 +346,17 @@
       }
 
       .cover-photo-container {
-        height: 45vh;
-        max-height: 45vh;
+        height: auto;
+        max-height: none;
+        min-height: 180px;
         border-radius: 18px 18px 0 0;
       }
 
       .cover-photo {
+        height: auto;
         border-radius: 18px 18px 0 0;
+        object-fit: contain;
+        object-position: center center;
       }
 
       form {
@@ -381,13 +399,17 @@
       }
 
       .cover-photo-container {
-        height: 40vh;
-        max-height: 40vh;
+        height: auto;
+        max-height: none;
+        min-height: 150px;
         border-radius: 15px 15px 0 0;
       }
 
       .cover-photo {
+        height: auto;
         border-radius: 15px 15px 0 0;
+        object-fit: contain;
+        object-position: center center;
       }
 
       form {
